@@ -60,18 +60,20 @@ def main():
     netscale = 4
     file_url = ['https://github.com/tutope8/MODG147/raw/refs/heads/main/4x_span_pretrain.pth']
 
-    # determine model paths
+    # Asegúrate de que el modelo se descargue correctamente
     if args.model_path is not None:
         model_path = args.model_path
     else:
         model_path = os.path.join('weights', args.model_name + '.pth')
         if not os.path.isfile(model_path):
             ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-            # model_path will be updated
             model_path = load_file_from_url(
-                url=file_url[0], model_dir=os.path.join(ROOT_DIR, 'weights'), progress=True, file_name=None)
+                url=file_url[0], 
+                model_dir=os.path.join(ROOT_DIR, 'weights'), 
+                progress=True, 
+                file_name=None)
 
-    # restorer para modelo SPAN (removido strict_load_g)
+    # Configuración del upsampler sin strict_load_g
     upsampler = RealESRGANer(
         scale=netscale,
         model_path=model_path,
