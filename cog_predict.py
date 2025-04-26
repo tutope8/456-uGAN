@@ -35,11 +35,19 @@ class Predictor(BasePredictor):
 
     def choose_model(self, scale, tile=0):
         half = True if torch.cuda.is_available() else False
-        # Configuración única para el modelo personalizado
-        model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4)
+        # Configuración específica para el modelo SPAN
+        model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=6, num_grow_ch=32, scale=4)
         model_path = 'weights/4x_span_pretrain.pth'
         self.upsampler = RealESRGANer(
-            scale=4, model_path=model_path, model=model, tile=tile, tile_pad=10, pre_pad=0, half=half)
+            scale=4, 
+            model_path=model_path, 
+            model=model, 
+            tile=tile, 
+            tile_pad=10, 
+            pre_pad=0, 
+            half=half,
+            strict_load_g=False  # Añadido para compatibilidad con SPAN
+        )
 
         self.face_enhancer = GFPGANer(
             model_path='weights/GFPGANv1.4.pth',
