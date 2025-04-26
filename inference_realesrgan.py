@@ -55,8 +55,8 @@ def main():
 
     # determine models according to model names
     args.model_name = args.model_name.split('.')[0]
-    # Usar un único modelo personalizado
-    model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4)
+    # Configuración específica para el modelo SPAN
+    model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=6, num_grow_ch=32, scale=4)
     netscale = 4
     file_url = ['https://github.com/tutope8/MODG147/raw/refs/heads/main/4x_span_pretrain.pth']
 
@@ -71,7 +71,7 @@ def main():
             model_path = load_file_from_url(
                 url=file_url[0], model_dir=os.path.join(ROOT_DIR, 'weights'), progress=True, file_name=None)
 
-    # restorer
+    # restorer con strict_load_g=False para modelo SPAN
     upsampler = RealESRGANer(
         scale=netscale,
         model_path=model_path,
@@ -80,7 +80,9 @@ def main():
         tile_pad=args.tile_pad,
         pre_pad=args.pre_pad,
         half=not args.fp32,
-        gpu_id=args.gpu_id)
+        gpu_id=args.gpu_id,
+        strict_load_g=False  # Añadido para compatibilidad con SPAN
+    )
 
     if args.face_enhance:  # Use GFPGAN for face enhancement
         from gfpgan import GFPGANer
