@@ -71,7 +71,7 @@ def main():
             model_path = load_file_from_url(
                 url=file_url[0], model_dir=os.path.join(ROOT_DIR, 'weights'), progress=True, file_name=None)
 
-    # restorer con strict_load_g=False para modelo SPAN
+    # restorer para modelo SPAN (removido strict_load_g)
     upsampler = RealESRGANer(
         scale=netscale,
         model_path=model_path,
@@ -80,8 +80,7 @@ def main():
         tile_pad=args.tile_pad,
         pre_pad=args.pre_pad,
         half=not args.fp32,
-        gpu_id=args.gpu_id,
-        strict_load_g=False  # Añadido para compatibilidad con SPAN
+        gpu_id=args.gpu_id
     )
 
     if args.face_enhance:  # Use GFPGAN for face enhancement
