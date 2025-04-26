@@ -173,7 +173,7 @@ class Writer:
 def inference_video(args, video_save_path, device=None, total_workers=1, worker_idx=0):
     # ---------------------- determine models according to model names ---------------------- #
     args.model_name = args.model_name.split('.pth')[0]
-    # Modificar la configuración del modelo para que coincida con los pesos
+    # Configuración específica para el modelo SPAN
     model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=6, num_grow_ch=32, scale=4)
     netscale = 4
     file_url = ['https://github.com/tutope8/MODG147/raw/refs/heads/main/4x_span_pretrain.pth']
@@ -182,11 +182,10 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
     model_path = os.path.join('weights', args.model_name + '.pth')
     if not os.path.isfile(model_path):
         ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-        # model_path will be updated
         model_path = load_file_from_url(
             url=file_url[0], model_dir=os.path.join(ROOT_DIR, 'weights'), progress=True, file_name=None)
 
-    # restorer
+    # restorer con strict_load_g=False como se especifica en los detalles del modelo
     upsampler = RealESRGANer(
         scale=netscale,
         model_path=model_path,
@@ -196,6 +195,7 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
         pre_pad=args.pre_pad,
         half=not args.fp32,
         device=device,
+        strict_load_g=False  # Añadido para compatibilidad con SPAN
     )
 
     if 'anime' in args.model_name and args.face_enhance:
