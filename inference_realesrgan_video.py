@@ -173,8 +173,8 @@ class Writer:
 def inference_video(args, video_save_path, device=None, total_workers=1, worker_idx=0):
     # ---------------------- determine models according to model names ---------------------- #
     args.model_name = args.model_name.split('.pth')[0]
-    # Use a single custom model configuration
-    model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4)
+    # Modificar la configuración del modelo para que coincida con los pesos
+    model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=6, num_grow_ch=32, scale=4)
     netscale = 4
     file_url = ['https://github.com/tutope8/MODG147/raw/refs/heads/main/4x_span_pretrain.pth']
 
